@@ -1,0 +1,33 @@
+/*  关于progress的整体框架 */
+.progress-bar {
+    width          :   100%;
+}
+
+/*  整条progress    */
+#all-progress {
+    width          :   70%;
+    border-radius  :   2px;
+    height         :   4px;
+    background-color : #edca13;
+    overflow       :   visible;
+}
+
+/*  已播放progress */
+#current-progress {
+    width          :   50%;
+    border-radius  :   2px;
+    height         :   4px;
+    background-color : #124f5a;
+}
+
+/*  拖放           */
+#progress-button {
+    width: 10px;
+    height: 10px;
+    display: block;
+    background-color: #0a6ebd;
+    border-radius: 5px;
+    position: relative;
+    top:-3px;
+    float: right;
+}
