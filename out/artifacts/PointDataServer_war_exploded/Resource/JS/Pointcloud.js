@@ -515,6 +515,40 @@ pointCloud3d.prototype = {
                     d3.selectAll("g.brush").remove();
                 }
             })
+        var start = {x:0,y:0};
+        var svgdom = svg._groups[0][0];
+        svgdom.addEventListener("mousedown",HandleLeftMouseDown);
+        function HandleLeftMouseDown(event) {
+            start.x = event.clientX;
+            start.y = event.clientY;
+            svgdom.addEventListener("mousemove",HandleLeftMouseMove);
+            svgdom.addEventListener("mouseup",HandleLeftMouseUp);
+        }
+        function HandleLeftMouseMove(event) {
+            var delta = {
+                x:event.clientX -start.x,
+                y:event.clientY -start.y
+            };
+            start.x = event.clientX;
+            start.y = event.clientY;
+
+            svg.selectAll("rect.brushRect").attr("originX",function () {
+              return  Number(d3.select(this).attr("originX"))+delta.x;
+            }).attr("originY",function () {
+              return  Number(d3.select(this).attr("originY"))+delta.y;
+            });
+            svg.selectAll("rect").attr("x",function () {
+              return  Number(d3.select(this).attr("x"))+delta.x;
+            }).attr("y",function () {
+              return  Number(d3.select(this).attr("y"))+delta.y;
+            });
+
+        }
+        function HandleLeftMouseUp(event){
+            svgdom.removeEventListener("mousemove",HandleLeftMouseMove);
+            svgdom.removeEventListener("mouseup",HandleLeftMouseUp);
+        }
+
     },
     generatebrush: function () {
         var pointCloud = this;
@@ -561,6 +595,7 @@ pointCloud3d.prototype = {
 
         };
     }
+    
 }
 BoxControl = function (boxmap) {
     this.boxmap = boxmap || new Map;

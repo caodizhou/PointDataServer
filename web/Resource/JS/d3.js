@@ -4375,10 +4375,6 @@ function brush$1(dim) {
           .attr("y", function(d) { return d.type[0] === "s" ? selection[1][1] - handleSize / 2 : selection[0][1] - handleSize / 2; })
           .attr("width", function(d) { return d.type === "n" || d.type === "s" ? selection[1][0] - selection[0][0] + handleSize : handleSize; })
           .attr("height", function(d) { return d.type === "e" || d.type === "w" ? selection[1][1] - selection[0][1] + handleSize : handleSize; });
-      if(group.select(".selection").attr("rotate")){
-        group.selectAll(".selection,.handle")
-            .attr("transform","rotate("+group.select(".selection").attr("rotate")+","+(selection[0][0]+selection[1][0])/2+" "+(selection[0][1]+selection[1][1])/2+")");
-      }
     }
 
     else {

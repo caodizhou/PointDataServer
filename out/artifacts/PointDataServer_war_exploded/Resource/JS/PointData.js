@@ -24,15 +24,24 @@ function pointload() {
                     alert("该ID不存在");
                 }
                 var dataindexmap = map.get(id);
-                var start = point3d.dataindex;
+                var index = point3d.dataindex;
                 for(var i=point3d.dataindex-1;i>=0;i--){
                     if(dataindexmap.get(i)&&dataindexmap.get(i).auto == false){
-                        start = i;
+                        index = i;
                         break;
                     }
                 }
-                if(start<point3d.dataindex){
-                    point3d.boxControl.interpolation(id,start,point3d.dataindex);
+                if(index<point3d.dataindex){
+                    point3d.boxControl.interpolation(id,index,point3d.dataindex);
+                }
+                for(var i=point3d.dataindex+1;i<data.length;i++){
+                    if(dataindexmap.get(i)&&dataindexmap.get(i).auto == false){
+                        index = i;
+                        break;
+                    }
+                }
+                if(index>point3d.dataindex){
+                    point3d.boxControl.interpolation(id,point3d.dataindex,index);
                 }
             });
             d3.select("#removeInput").on("click",function () {
