@@ -238,7 +238,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 	//
 	// internals
 	//
-
+	this.test = function () {
+		return scope.target;
+	}
 	var scope = this;
 
 	var changeEvent = { type: 'change' };
@@ -494,11 +496,12 @@ THREE.OrbitControls = function ( object, domElement ) {
 		panStart.copy( panEnd );
 
 		scope.update();
+		scope.object.offset = (scope.target).clone();
 
 	}
 
 	function handleMouseUp( event ) {
-
+		console.log(scope.target);
 		// console.log( 'handleMouseUp' );
 
 	}
@@ -708,7 +711,6 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	function onMouseMove( event ) {
-
 		if ( scope.enabled === false ) return;
 
 		event.preventDefault();

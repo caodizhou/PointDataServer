@@ -12,6 +12,7 @@ scale = function (btn, bar, cur_bar, datalenth) {
     this.cur_bar = $(cur_bar);
     this.datalenth = datalenth;
     this.dataindex;
+    this.playinterval;
     this.minLength = this.bar.offset().left;
     this.maxLength = this.minLength + this.bar.width();
     this.currentX = this.btn.offset().left;
@@ -25,14 +26,15 @@ scale.prototype = {
         var f = this;
         f.cur_bar.css("width", "0%");
         f.currentX = f.minLength;
+        var bar = document.getElementById("processBar");
         document.getElementById("progress-button").onmousedown = function () {
-            document.onmousemove = function (ev) {
+            bar.onmousemove = function (ev) {
                 var ev = ev || window.event;
 
                 var p = ev;
                 var moveX = p.clientX;
                 var moveY = p.clientY;
-                if ((Math.abs(moveX - f.currentX) < 100) && (Math.abs(moveY - f.currentY) < 20 )) {
+                if (Math.abs(moveX - f.currentX) < 100  ) {
                     if (moveX < f.minLength) {
                         f.cur_bar.css("width", "0%");
                         f.currentX = f.minLength;
@@ -48,10 +50,12 @@ scale.prototype = {
                         // f.dataindex = Math.ceil(percent * f.datalenth);
                         // console.log(moveX+" "+moveY+" "+f.dataindex);
                         {
+                            console.log("++");
                             f.dataindex++;
                             f.process(f.dataindex , f.datalenth);
                         }
                         if(currentX - f.dataindex<-1) {
+                            console.log("--");
                             f.dataindex--;
                             f.process(f.dataindex , f.datalenth);
                         }
@@ -59,9 +63,9 @@ scale.prototype = {
                 }
 
             };
-            document.onmouseup = function () {
-                document.onmousemove = null;
-                document.onmouseup = null;
+            bar.onmouseup = function () {
+                bar.onmousemove = null;
+                bar.onmouseup = null;
             };
             return false;
         };
@@ -76,13 +80,36 @@ scale.prototype = {
     },
     start: function () {
         var f = this;
-        setInterval(function () {
-            if ($("#onoffswitch").is(':checked') && f.dataindex < f.datalenth) {
-                f.dataindex++;
-                console.log(f.dataindex);
-                f.process(f.dataindex, f.datalenth);
+        // this.playinterval = setInterval(function () {
+        //     if ($("#onoffswitch").is(':checked') && f.dataindex < f.datalenth) {
+        //         f.dataindex++;
+        //         console.log(f.dataindex);
+        //         f.process(f.dataindex, f.datalenth);
+        //     }
+        // }, 1000);
+        function clickSwitch() {
+            if ($("#onoffswitch").is(':checked')) {
+                // d3.selectAll(".pointCloud2d")
+                //     .style("visibility", "hidden");
+                // d3.selectAll(".pointCloud3d")
+                //     .style("visibility", "visible")
+                this.playinterval = setInterval(function () {
+                    if ($("#onoffswitch").is(':checked') && f.dataindex < f.datalenth) {
+                        f.dataindex++;
+                        console.log(f.dataindex);
+                        f.process(f.dataindex, f.datalenth);
+                    }
+                    // console.log("hehe");
+                }, 1000);
+            } else {
+                if(this.playinterval){
+                    clearInterval(this.playinterval);
+                }
+                // console.log("haha")
             }
-        }, 1000)
+        }
+        d3.select("#onoffswitch")
+            .on("click", clickSwitch);
     }
 
 };

@@ -11,14 +11,10 @@
             .style("width", WIDTH);
         var x = d3.scale.identity().domain([0, WIDTH]),
             y = d3.scale.identity().domain([0, HEIGHT]);
-        // defaultExtent = [[100, 100], [300, 300]],
 
         var brush = d3.svg.brush()
             .x(x)
             .y(y);
-            // .extent(defaultExtent);
-            // .on("brush", brushed)
-            // .on("brushend", brushended);
         svg.append("g")
             .attr("class", "brush")
             .call(brush)

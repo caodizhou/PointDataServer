@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.ArrayList;
+
 /**
  * Created by cdz on 2017/10/14.
  */
@@ -10,6 +12,7 @@ public class Point {
     private float value;
 
     public Point() {
+
     }
 
     public Point(float x, float y, float z, float value) {
