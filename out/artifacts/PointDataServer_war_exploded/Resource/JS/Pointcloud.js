@@ -541,6 +541,10 @@ pointCloud3d.prototype = {
               return  Number(d3.select(this).attr("x"))+delta.x;
             }).attr("y",function () {
               return  Number(d3.select(this).attr("y"))+delta.y;
+            }).attr("transform-origin",function () {
+                var id = d3.select(this).attr("mainId");
+                var brushrect =id&&d3.select("rect#"+id)||d3.select(this);
+              return brushrect.attr("originX")+" "+brushrect.attr("originY");
             });
 
         }

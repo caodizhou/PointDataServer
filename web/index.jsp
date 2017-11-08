@@ -13,10 +13,6 @@
     <script src="/Resource/JSLIB/jquery-3.2.1.min.js"></script>
     <script src="/Resource/JSLIB/d3.js"></script>
     <script src="/Resource/JSLIB/d3-brush.js"></script>
-    <script src="/Resource/JSLIB/pixi.min.js"></script>
-    <%--<script src="/Resource/JS/FileRead.js"></script>--%>
-    <%--<script src="https://d3js.org/d3-zoom.v1.min.js"></script>--%>
-    <%--<script src="/Resource/JS/Data.js"></script>--%>
     <script src="/Resource/JS/PointData.js"></script>
     <script src="/Resource/JS/Pointcloud.js"></script>
     <script src="/Resource/JS/myRect.js"></script>
@@ -79,9 +75,6 @@
         <input type="button" id="removeInput" value="remove">
     </form>
 </div>
-<%--<script src="/Resource/JS/PointCloudpixi.js"></script>--%>
-
-<!--<script src="/Resource/JS/PointCloud2d.js"></script>-->
 </body>
 <script src="/Resource/JS/ProcessBar.js"></script>
 </html>
