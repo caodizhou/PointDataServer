@@ -222,10 +222,7 @@ pointCloud3d.prototype = {
                     pointCloud.removeCube();
                     pointCloud.generateCube();
                 } else {
-                    // pointCloud.removebrush();
-                    // pointCloud.createbrush();
                     pointCloud.refrushbrush();
-                    pointCloud.generatebrush();
                 }
             }
 
