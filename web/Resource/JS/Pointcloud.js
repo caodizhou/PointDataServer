@@ -44,7 +44,7 @@ pointCloud3d.prototype = {
             fieldOfView = 75;
             aspectRatio = WIDTH / HEIGHT;
             nearPlane = 1;
-            farPlane = 3000;
+            farPlane = 1500;
             /* 	fieldOfView — Camera frustum vertical field of view.
              aspectRatio — Camera frustum aspect ratio.
              nearPlane — Camera frustum near plane.
@@ -242,14 +242,18 @@ pointCloud3d.prototype = {
     },
     reset22d: function () {
         var pointCloud = this;
+        var z = pointCloud.camera.position.z;
         pointCloud.controls.reset();
+        pointCloud.camera.position.z = z;
         // pointCloud.camera.position.z = 800;
     },
-    creatCube: function (id, x, y, w, l, r) {
-        var geometry = new THREE.BoxGeometry(w, l, 0);
+    creatCube: function (id, x, y, w, l, r ,z ,h) {
+        var cubeh = h||0;
+        var geometry = new THREE.BoxGeometry(w, l, cubeh);
         var cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 'green', wireframe: true}));
         cube.position.x = x;
         cube.position.y = y;
+        cube.position.z = z||0;
         cube.rotation.z = -r * Math.PI / 180;
         this.scene.add(cube);
         return cube;
@@ -294,7 +298,7 @@ pointCloud3d.prototype = {
         boxmap.forEach(function (value, key, map) {
             var box = value.get(pointCloud.dataindex);
             if (box != null) {
-                pointCloud.creatCube(key, box.x, box.y, box.w, box.l, box.r);
+                pointCloud.creatCube(key, box.x, box.y, box.w, box.l, box.r,box.z,box.h);
             }
         })
     },
@@ -321,6 +325,7 @@ pointCloud3d.prototype = {
                 box.w = point2.x - point1.x;
                 box.l = point2.y - point1.y;
                 box.r = r;
+                box.getHeight(pointCloud.data[pointCloud.dataindex]);
             }
         }
 
@@ -431,7 +436,7 @@ pointCloud3d.prototype = {
                     $("#BoxIdInput").val(id);
                     d3.select("#BoxIdInput").property("oldId", id);
                     $("#xInput").val(box.x);
-                    $("#yInput").val(box.y);
+                    $("#yInput").val(Math.abs(box.y));
                     $("#lengthInput").val(box.l);
                     $("#widthInput").val(box.w);
                 });
@@ -629,10 +634,7 @@ BoxControl.prototype = {
             box.auto = true;
             boxindexmap.set(i, box);
         }
-    },
-    generateBox: function (svg, dataindex, x, y, scale) {
-
-    },
+    }
 
 
 }
@@ -648,20 +650,22 @@ Box = function (x, y, w, l, r, id, dataindex) {
 }
 Box.prototype = {
     getHeight: function (data) {
+        var box = this;
+        box.getVertexPoint();
         if (data == null || data.length == 0) {
             this.h = 0;
             this.z = 0;
             return;
         }
         var zmin = Number.MAX_VALUE;
-        var zmax = -Number.MIN_VALUE;
+        var zmax = -Number.MAX_VALUE;
         data.forEach(function (v) {
-            if (this.isInbox(v)) {
-                if (v > zmax) {
-                    zmax = v;
+            if (box.isInbox(v.x*10,v.y*10)) {
+                if (v.z*10 > zmax) {
+                    zmax = v.z*10;
                 }
-                if (v < zmin) {
-                    zmin = v;
+                if (v.z*10 < zmin) {
+                    zmin = v.z*10;
                 }
             }
 
@@ -688,6 +692,7 @@ Box.prototype = {
         }
     },
     getVertexPoint: function () {
+
         var x = this.x;
         var y = this.y;
         var r = this.r;
@@ -705,7 +710,7 @@ Box.prototype = {
         this.y2 = x2 * sinr + y1 * cosr + y;
         this.y3 = x2 * sinr + y2 * cosr + y;
         this.y4 = x1 * sinr + y2 * cosr + y;
-        this.threshold = Math.max(this.w, this.l) * Math.sqrt(2);
+        // this.threshold = Math.max(this.w, this.l) * Math.sqrt(2);
 
     }
 }
