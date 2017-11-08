@@ -17,6 +17,7 @@ function pointload() {
             point3d.drawPointCloud3d();
             // point2d.drawPointCloud2d();
             scale_point.start();
+            point3d.createbrush();
             d3.select("#interpolateInput").on("click",function () {
                 var id = Number($("#BoxIdInput").val());
                 var map = point3d.boxControl.boxmap;

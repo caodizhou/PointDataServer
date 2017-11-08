@@ -222,8 +222,9 @@ pointCloud3d.prototype = {
                     pointCloud.removeCube();
                     pointCloud.generateCube();
                 } else {
-                    pointCloud.removebrush();
-                    pointCloud.createbrush();
+                    // pointCloud.removebrush();
+                    // pointCloud.createbrush();
+                    pointCloud.refrushbrush();
                     pointCloud.generatebrush();
                 }
             }
@@ -244,8 +245,7 @@ pointCloud3d.prototype = {
     },
     reset22d: function () {
         var pointCloud = this;
-        pointCloud.camera.position.x = 0;
-        pointCloud.camera.position.y = 0;
+        pointCloud.controls.reset();
         // pointCloud.camera.position.z = 800;
     },
     creatCube: function (id, x, y, w, l, r) {
@@ -440,9 +440,7 @@ pointCloud3d.prototype = {
                 });
             document.removeEventListener("dblclick",HandleBrushDblClick,true);
             // pointCloud.creatCube(0,x1,y1,x2,y2,rotate);
-            function hundlebrushmousedown() {
-                var pointstart
-            }
+
         }
 
         var brush = d3.brush()
@@ -581,6 +579,12 @@ pointCloud3d.prototype = {
     },
     removebrush: function () {
         d3.select(this.container).selectAll("svg").remove();
+    },
+    refrushbrush:function () {
+        var svg = d3.select(this.container).select("svg.pointCloud3d");
+        svg.selectAll("rect").remove();
+        svg.selectAll("g").remove();
+        this.generatebrush();
     },
     trans2dto3d: function (x, y) {
         var halfWidth = window.innerWidth * 0.7 / 2;
