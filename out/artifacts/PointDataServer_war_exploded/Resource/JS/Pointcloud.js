@@ -44,7 +44,7 @@ pointCloud3d.prototype = {
             fieldOfView = 75;
             aspectRatio = WIDTH / HEIGHT;
             nearPlane = 1;
-            farPlane = 1500;
+            farPlane = 3000;
             /* 	fieldOfView — Camera frustum vertical field of view.
              aspectRatio — Camera frustum aspect ratio.
              nearPlane — Camera frustum near plane.
@@ -56,7 +56,7 @@ pointCloud3d.prototype = {
              is the portion of a solid (normally a cone or pyramid)
              that lies between two parallel planes cutting it. - wikipedia.		*/
 
-            cameraZ = farPlane / 3;
+            cameraZ = farPlane/6 ;
             /*	So, 1000? Yes! move on!	*/
             fogHex = 0x000000;
             /* As black as your heart.	*/

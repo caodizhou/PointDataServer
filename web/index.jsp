@@ -13,8 +13,10 @@
     <script src="/Resource/JSLIB/jquery-3.2.1.min.js"></script>
     <script src="/Resource/JSLIB/d3.js"></script>
     <script src="/Resource/JSLIB/d3-brush.js"></script>
+    <script src="/Resource/JSLIB/pixi.min.js"></script>
     <script src="/Resource/JS/PointData.js"></script>
     <script src="/Resource/JS/Pointcloud.js"></script>
+    <script src="/Resource/JS/PointCloudpixi.js"></script>
     <script src="/Resource/JS/myRect.js"></script>
 
 </head>

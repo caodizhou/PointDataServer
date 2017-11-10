@@ -18,7 +18,7 @@ pointCloud2d.prototype = {
         init();
         function init() {
             HEIGHT = window.innerHeight;
-            WIDTH = window.innerWidth;
+            WIDTH = window.innerWidth*0.7;
             // var graphicsset = generategraphics(data);
             var containerset = test(data);
             var svg = container.append("svg")
@@ -144,6 +144,8 @@ pointCloud2d.prototype = {
                 for(var i =0;i<data.length;i++){
                     var datalength = data[i].length;
                    var container = new PIXI.ParticleContainer();
+                    container._maxSize = 1000000;
+
                     for(var j=0;j<datalength;j++){
                         var sprite = new PIXI.Sprite(texture);
                         sprite.x = data[i][j].x * 5 + 500;
