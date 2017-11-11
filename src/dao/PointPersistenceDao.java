@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -64,7 +66,9 @@ public class PointPersistenceDao {
         format.setEncoding("UTF-8");//设置编码格式
         XMLWriter xmlWriter = null;
         try {
-            xmlWriter = new XMLWriter(new FileOutputStream("/Users/lijie/Documents/项目/PointDataServer/web/Resource/xml/demo1.xml"),format);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+            xmlWriter = new XMLWriter(new FileOutputStream("/Users/lijie/Documents/项目/PointDataServer/web/Resource/xml/"+ sdf.format(new Date())+".xml"),format);
             xmlWriter.write(document);
             xmlWriter.close();
         } catch (FileNotFoundException e) {
