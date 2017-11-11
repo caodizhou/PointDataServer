@@ -6,6 +6,8 @@
     <link type="text/css" href="/Resource/CSS/Switch.css" rel="stylesheet">
     <link type="text/css" href="/Resource/CSS/PointCloud2d.css" rel="stylesheet">
     <link type="text/css" href="/Resource/CSS/ProcessBar.css" rel="stylesheet">
+    <link type="text/css" href="Resource/CSS/bootstrap.min.css" rel="stylesheet">
+    <script src="Resource/JS/JsonUtils.js"></script>
     <script src="/Resource/JSLIB/three.js"></script>
     <script src="/Resource/JSLIB/Stats.js"></script>
     <script src="/Resource/JSLIB/dat.gui.js"></script>
@@ -13,6 +15,7 @@
     <script src="/Resource/JSLIB/jquery-3.2.1.min.js"></script>
     <script src="/Resource/JSLIB/d3.js"></script>
     <script src="/Resource/JSLIB/d3-brush.js"></script>
+    <script src="/Resource/JSLIB/pixi.min.js"></script>
     <script src="/Resource/JS/PointData.js"></script>
     <script src="/Resource/JS/Pointcloud.js"></script>
     <script src="/Resource/JS/myRect.js"></script>
@@ -25,7 +28,7 @@
         <button id="brush">brush</button>
     </div>
     <!--<input type="file" name="file" id='filea' onchange='aShow()'/>-->
-    <div class="progress-bar" id="processBar" style="position: absolute ;z-index : 1000;bottom: 2%">
+    <div class="progress-bar1" id="processBar" style="position: absolute ;z-index : 1000;bottom: 2%">
         <div id="all-progress">
             <div id="current-progress">
                 <span id="progress-button"></span>
@@ -68,13 +71,18 @@
         <br>
 
         <br>
-        <input type="button" id="submitInput" value="Submit">
+        <input type="button" id="submitInput" value="Submit" class="btn btn-default">
         <br>
-        <input type="button" id="interpolateInput" value="interpolate">
+        <input type="button" id="interpolateInput" value="interpolate" class="btn btn-default">
         <br>
-        <input type="button" id="removeInput" value="remove">
+        <input type="button" id="removeInput" value="remove" class="btn btn-default">
+
+        <br>
+        <input type="button" id="persistenceInput" value="persistence" class="btn btn-primary">
     </form>
 </div>
+
 </body>
 <script src="/Resource/JS/ProcessBar.js"></script>
+<script src="Resource/JS/lib/bootstrap.min.js"></script>
 </html>

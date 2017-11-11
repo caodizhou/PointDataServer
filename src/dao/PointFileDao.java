@@ -31,7 +31,9 @@ public class PointFileDao {
         else {
             File[] files = file.listFiles();
             for(File tempfile:files){
-                pointLists.add(ByteFileReader.getPointsbyByteFile(tempfile.getAbsolutePath()));
+                if(tempfile.getName().endsWith(".bin")){
+                    pointLists.add(ByteFileReader.getPointsbyByteFile(tempfile.getAbsolutePath()));
+                }
             }
             return pointLists;
         }

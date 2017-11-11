@@ -81,6 +81,24 @@ function pointload() {
 
                 !svg.empty()&&changeRectId(oldid,id,svg);
             });
+            d3.select("#persistenceInput").on("click",function () {
+                console.log(JsonUtils.mapToObj(point3d.boxControl.boxmap))
+                let boxmapJson = JsonUtils.mapToObj(point3d.boxControl.boxmap)
+                
+                $.ajax({
+                    type: "post",
+                    url: "pointPersistence",
+                    dataType: "json",
+                    // contentType: "application/json; charset=utf-8",
+                    data: {'boxmap':JSON.stringify(boxmapJson)},
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error: function () {
+                        console.log("error")
+                    }
+                })
+            })
             function clickSwitch() {
                 if ($("#onoffswitch2").is(':checked')) {
                     point3d.updateCube();
