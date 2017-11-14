@@ -7,6 +7,7 @@ pointCloud3d = function (data, container, scale, boxControl) {
     this.renderer;
     this.scene;
     this.controls;
+    this.controls2d;
     this.boxControl = boxControl;
 }
 pointCloud3d.prototype = {
@@ -399,7 +400,7 @@ pointCloud3d.prototype = {
             .attr("class", "pointCloud3d");
 
 
-        var controls = new THREE.OrbitControls(pointCloud.camera, svg._groups[0][0]);//创建控件对象 camera是你的相机对象
+        var controls = pointCloud.controls2d = new THREE.OrbitControls(pointCloud.camera, svg._groups[0][0]);//创建控件对象 camera是你的相机对象
         controls.mouseButtons.PAN = THREE.MOUSE.LEFT;
         controls.mouseButtons.ORBIT = null;
         // controls.addEventListener('change', render);//监听鼠标、键盘事件
@@ -438,7 +439,11 @@ pointCloud3d.prototype = {
                     $("#xInput").val(box.x);
                     $("#yInput").val(box.y);
                     $("#lengthInput").val(Math.abs(box.l));
-                    $("#widthInput").val(box.w);
+                    $("#widthInput").val(Math.abs(box.w));
+                    pointCloud.controls2d.target.x = pointCloud.camera.position.x = box.x;
+                    pointCloud.controls2d.target.y = pointCloud.camera.position.y = box.y;
+                    pointCloud.renderer.render(pointCloud.scene,pointCloud.camera);
+                    pointCloud.refrushbrush();
                 });
             document.removeEventListener("dblclick", HandleBrushDblClick, true);
             // pointCloud.creatCube(0,x1,y1,x2,y2,rotate);
@@ -554,7 +559,8 @@ pointCloud3d.prototype = {
             svgdom.removeEventListener("mousemove", HandleLeftMouseMove);
             svgdom.removeEventListener("mouseup", HandleLeftMouseUp);
         }
-        svgdom.addEventListener("wheel",HandleMouseWheel,false);
+
+        svgdom.addEventListener("wheel", HandleMouseWheel, false);
         function HandleMouseWheel(event) {
             pointCloud.updateBrushOnWheel();
         }
@@ -583,6 +589,10 @@ pointCloud3d.prototype = {
                 $("#yInput").val(box.y);
                 $("#lengthInput").val(box.l);
                 $("#widthInput").val(box.w);
+                pointCloud.controls2d.target.x = pointCloud.camera.position.x = box.x;
+                pointCloud.controls2d.target.y = pointCloud.camera.position.y = box.y;
+                pointCloud.renderer.render(pointCloud.scene,pointCloud.camera);
+                pointCloud.refrushbrush();
             })
     },
     updateBrushOnWheel: function () {
