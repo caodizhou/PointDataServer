@@ -1,6 +1,7 @@
 /**
  * Created by cdz on 2017/10/14.
  */
+var point3d = null;
 function pointload() {
     $.ajax({
         type: "get",
@@ -10,7 +11,7 @@ function pointload() {
             var contain3d = document.getElementById("pointcloud3d");
             // var contain2d = document.getElementById("pointcloud2d");
             var scale_point = new scale("#progress-button", "#all-progress", "#current-progress", data.length);
-            var point3d = new pointCloud3d(data, contain3d, scale_point);
+            point3d = new pointCloud3d(data, contain3d, scale_point, $('.PointCloudView').eq(0).height(), $('.PointCloudView').eq(0).width());
             var boxcontrol = new BoxControl();
             point3d.boxControl = boxcontrol;
             // var point2d = new pointCloud2d(data, contain2d, scale_point);

@@ -1,0 +1,32 @@
+.PointCloudView{
+    position: absolute;
+    top: 0px;
+    left: 0;
+    right: 300px;
+    bottom: 32px;
+}
+.ControlPanel{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0;
+    width: 300px;
+    background: #eee;
+    overflow: auto;
+}
+.top-panel{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+.input-group-addon{
+    width:40px!important;
+}
+.input-group{
+    width: 100%;
+}
+.button-box{
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: 20px;
+}

@@ -1,4 +1,4 @@
-pointCloud3d = function (data, container, scale, boxControl) {
+pointCloud3d = function (data, container, scale, height, width, boxControl) {
     this.data = data;
     this.dataindex = 0;
     this.container = container;
@@ -9,18 +9,21 @@ pointCloud3d = function (data, container, scale, boxControl) {
     this.controls;
     this.controls2d;
     this.boxControl = boxControl;
+    this.HEIGHT = height;
+    this.WIDTH = width;
 }
+
 pointCloud3d.prototype = {
 
     drawPointCloud3d: function () {
+        var pointcloud  = this;
         var data = this.data;
         var container = this.container;
         var scale = this.scale;
         var scene, camera, renderer;
         var pointCloud = this;
         // I guess we need this stuff too
-        var HEIGHT,
-            WIDTH, fieldOfView, aspectRatio,
+        var fieldOfView, aspectRatio,
             nearPlane, farPlane, stats,
             geometry, particleCount,
             i,
@@ -32,18 +35,17 @@ pointCloud3d.prototype = {
             parameterCount, particles, time, now,
             dataindex = scale.dataindex;
 
-        init();
+        init(pointcloud);
         animate();
 
-        function init() {
-
-            HEIGHT = window.innerHeight;
-            WIDTH = window.innerWidth * 0.7;
-            windowHalfX = WIDTH / 2;
-            windowHalfY = HEIGHT / 2;
+        function init(pointcloud) {
+            // HEIGHT = window.innerHeight;
+            // WIDTH = window.innerWidth;
+            windowHalfX = pointcloud.WIDTH / 2;
+            windowHalfY = pointcloud.HEIGHT / 2;
 
             fieldOfView = 75;
-            aspectRatio = WIDTH / HEIGHT;
+            aspectRatio = pointcloud.WIDTH / pointcloud.HEIGHT;
             nearPlane = 1;
             farPlane = 1500;
             /* 	fieldOfView — Camera frustum vertical field of view.
@@ -123,7 +125,7 @@ pointCloud3d.prototype = {
             // size = parameters[0][1];
 
             materials = new THREE.PointCloudMaterial({
-                size: 0.3
+                size: 1
             });
 
             particles = new THREE.PointCloud(geometry, materials);
@@ -142,7 +144,7 @@ pointCloud3d.prototype = {
             /*	Rendererererers particles.	*/
             renderer.setPixelRatio(window.devicePixelRatio);
             /*	Probably 1; unless you're fancy.	*/
-            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setSize(pointcloud.WIDTH, pointcloud.HEIGHT);
             /*	Full screen baby Wooooo!	*/
 
             var controls = new THREE.OrbitControls(camera, renderer.domElement);//创建控件对象 camera是你的相机对象
@@ -265,8 +267,8 @@ pointCloud3d.prototype = {
         // position.z = 0;
         // camera.position.x = 0;
         // camera.position.y = 0;
-        var halfWidth = window.innerWidth * 0.7 / 2;
-        var halfHeight = window.innerHeight / 2;
+        var halfWidth = this.WIDTH / 2;
+        var halfHeight = this.HEIGHT / 2;
         var z = new THREE.Vector3().project(camera).z;
         // var x1 = (x1-halfWidth)/halfWidth;
         // var y1 = (y1-halfHeight)/halfHeight;
@@ -342,9 +344,9 @@ pointCloud3d.prototype = {
         var camera = pointCloud.camera;
         var targetDistance = camera.position.length();
         targetDistance *= Math.tan(( camera.fov / 2 ) * Math.PI / 180.0);
-        var HEIGHT = window.innerHeight;
-        var halfWidth = window.innerWidth * 0.7 / 2;
-        var halfHeight = window.innerHeight / 2;
+        // var HEIGHT = window.innerHeight;
+        var halfWidth = this.WIDTH / 2;
+        var halfHeight = this.HEIGHT / 2;
         var center = new THREE.Vector3().project(camera);
         var r = r || 0;
         var result = {
@@ -353,10 +355,10 @@ pointCloud3d.prototype = {
             y: Math.round(-center.y * halfHeight + halfHeight)
 
         };
-        var offset_x = (x - result.x) * 2 * targetDistance / HEIGHT;
-        var offset_y = -(y - result.y) * 2 * targetDistance / HEIGHT;
-        var cubel = l * 2 * targetDistance / HEIGHT;
-        var cubew = w * 2 * targetDistance / HEIGHT;
+        var offset_x = (x - result.x) * 2 * targetDistance / this.HEIGHT;
+        var offset_y = -(y - result.y) * 2 * targetDistance / this.HEIGHT;
+        var cubel = l * 2 * targetDistance / this.HEIGHT;
+        var cubew = w * 2 * targetDistance / this.HEIGHT;
 
         function getheight(x, y, h, w) {
             var size = Math.max(h, w);
@@ -388,14 +390,14 @@ pointCloud3d.prototype = {
         return cube;
     },
     createbrush: function () {
-        var HEIGHT = window.innerHeight;
-        var WIDTH = window.innerWidth * 0.7;
+        // var HEIGHT = window.innerHeight;
+        // var WIDTH = window.innerWidth ;
         var pointCloud = this;
         var brushmode = false;
         var svg = d3.select(this.container)
             .append("svg")
-            .style("height", HEIGHT)
-            .style("width", WIDTH)
+            .style("height", this.HEIGHT)
+            .style("width", this.WIDTH)
             .style("position", "absolute")
             .attr("class", "pointCloud3d");
 
@@ -404,7 +406,7 @@ pointCloud3d.prototype = {
         controls.mouseButtons.PAN = THREE.MOUSE.LEFT;
         controls.mouseButtons.ORBIT = null;
         // controls.addEventListener('change', render);//监听鼠标、键盘事件
-        var defaultExtent = [[0, 0], [WIDTH, HEIGHT]];
+        var defaultExtent = [[0, 0], [this.WIDTH, this.HEIGHT]];
 
         function my_filter() {
             return brushmode;
@@ -608,14 +610,14 @@ pointCloud3d.prototype = {
         this.generatebrush();
     },
     trans2dto3d: function (x, y) {
-        var halfWidth = window.innerWidth * 0.7 / 2;
-        var halfHeight = window.innerHeight / 2;
+        var halfWidth = this.WIDTH / 2;
+        var halfHeight = this.HEIGHT / 2;
         var z = new THREE.Vector3().project(this.camera).z;
         return new THREE.Vector3((x - halfWidth) / halfWidth, -(y - halfHeight) / halfHeight, z).unproject(this.camera);
     },
     trans3dto2d: function (x, y, z) {
-        var halfWidth = window.innerWidth * 0.7 / 2;
-        var halfHeight = window.innerHeight / 2;
+        var halfWidth = this.WIDTH / 2;
+        var halfHeight = this.HEIGHT / 2;
         var v = new THREE.Vector3(x, y, z).project(this.camera);
         return {
 
@@ -657,7 +659,7 @@ BoxControl.prototype = {
 
 
 }
-Box = function (x, y, w, l, r, id, dataindex) {
+Box = function (x, y, w, l, r, id, dataindex, type) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -666,6 +668,7 @@ Box = function (x, y, w, l, r, id, dataindex) {
     this.id = id;
     this.dataindex = dataindex;
     this.auto = true;
+    this.type = type;
 }
 Box.prototype = {
     getHeight: function (data) {
