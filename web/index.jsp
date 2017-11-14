@@ -18,6 +18,7 @@
     <script src="/Resource/JSLIB/pixi.min.js"></script>
     <script src="/Resource/JS/PointData.js"></script>
     <script src="/Resource/JS/Pointcloud.js"></script>
+    <script src="/Resource/JS/PointCloudpixi.js"></script>
     <script src="/Resource/JS/myRect.js"></script>
 
 </head>

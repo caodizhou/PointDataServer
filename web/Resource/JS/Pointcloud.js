@@ -7,6 +7,7 @@ pointCloud3d = function (data, container, scale, boxControl) {
     this.renderer;
     this.scene;
     this.controls;
+    this.controls2d;
     this.boxControl = boxControl;
 }
 pointCloud3d.prototype = {
@@ -207,7 +208,7 @@ pointCloud3d.prototype = {
                 }
                 particles.geometry = geometry;
                 // time = now;
-                if (!$("#onoffswitch2").is(':checked')){
+                if (!$("#onoffswitch2").is(':checked')) {
                     pointCloud.updateCube();
                 }
                 dataindex = scale.dataindex;
@@ -247,13 +248,13 @@ pointCloud3d.prototype = {
         pointCloud.camera.position.z = z;
         // pointCloud.camera.position.z = 800;
     },
-    creatCube: function (id, x, y, w, l, r ,z ,h) {
-        var cubeh = h||0;
+    creatCube: function (id, x, y, w, l, r, z, h) {
+        var cubeh = h || 0;
         var geometry = new THREE.BoxGeometry(w, l, cubeh);
         var cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 'green', wireframe: true}));
         cube.position.x = x;
         cube.position.y = y;
-        cube.position.z = z||0;
+        cube.position.z = z || 0;
         cube.rotation.z = -r * Math.PI / 180;
         this.scene.add(cube);
         return cube;
@@ -298,7 +299,7 @@ pointCloud3d.prototype = {
         boxmap.forEach(function (value, key, map) {
             var box = value.get(pointCloud.dataindex);
             if (box != null) {
-                pointCloud.creatCube(key, box.x, box.y, box.w, box.l, box.r,box.z,box.h);
+                pointCloud.creatCube(key, box.x, box.y, box.w, box.l, box.r, box.z, box.h);
             }
         })
     },
@@ -399,7 +400,7 @@ pointCloud3d.prototype = {
             .attr("class", "pointCloud3d");
 
 
-        var controls = new THREE.OrbitControls(pointCloud.camera, svg._groups[0][0]);//创建控件对象 camera是你的相机对象
+        var controls = pointCloud.controls2d = new THREE.OrbitControls(pointCloud.camera, svg._groups[0][0]);//创建控件对象 camera是你的相机对象
         controls.mouseButtons.PAN = THREE.MOUSE.LEFT;
         controls.mouseButtons.ORBIT = null;
         // controls.addEventListener('change', render);//监听鼠标、键盘事件
@@ -418,7 +419,7 @@ pointCloud3d.prototype = {
             var height = Number(rect.attr("height"));
             var id = 1;
             var boxmap = pointCloud.boxControl.boxmap;
-            while (boxmap.get(id) != null) {
+            while (boxmap.get(id) != null && boxmap.get(id).size != 0) {
                 id++;
             }
             var box = new Box(x + width / 2, y + height / 2, width, height, rotate, id, pointCloud.dataindex);
@@ -436,11 +437,15 @@ pointCloud3d.prototype = {
                     $("#BoxIdInput").val(id);
                     d3.select("#BoxIdInput").property("oldId", id);
                     $("#xInput").val(box.x);
-                    $("#yInput").val(Math.abs(box.y));
-                    $("#lengthInput").val(box.l);
-                    $("#widthInput").val(box.w);
+                    $("#yInput").val(box.y);
+                    $("#lengthInput").val(Math.abs(box.l));
+                    $("#widthInput").val(Math.abs(box.w));
+                    pointCloud.controls2d.target.x = pointCloud.camera.position.x = box.x;
+                    pointCloud.controls2d.target.y = pointCloud.camera.position.y = box.y;
+                    pointCloud.renderer.render(pointCloud.scene,pointCloud.camera);
+                    pointCloud.refrushbrush();
                 });
-            document.removeEventListener("dblclick",HandleBrushDblClick,true);
+            document.removeEventListener("dblclick", HandleBrushDblClick, true);
             // pointCloud.creatCube(0,x1,y1,x2,y2,rotate);
 
         }
@@ -515,42 +520,49 @@ pointCloud3d.prototype = {
                     d3.selectAll("g.brush").remove();
                 }
             })
-        var start = {x:0,y:0};
+        var start = {x: 0, y: 0};
         var svgdom = svg._groups[0][0];
-        svgdom.addEventListener("mousedown",HandleLeftMouseDown);
+        svgdom.addEventListener("mousedown", HandleLeftMouseDown);
         function HandleLeftMouseDown(event) {
             start.x = event.clientX;
             start.y = event.clientY;
-            svgdom.addEventListener("mousemove",HandleLeftMouseMove);
-            svgdom.addEventListener("mouseup",HandleLeftMouseUp);
+            svgdom.addEventListener("mousemove", HandleLeftMouseMove);
+            svgdom.addEventListener("mouseup", HandleLeftMouseUp);
         }
+
         function HandleLeftMouseMove(event) {
             var delta = {
-                x:event.clientX -start.x,
-                y:event.clientY -start.y
+                x: event.clientX - start.x,
+                y: event.clientY - start.y
             };
             start.x = event.clientX;
             start.y = event.clientY;
 
-            svg.selectAll("rect.brushRect").attr("originX",function () {
-              return  Number(d3.select(this).attr("originX"))+delta.x;
-            }).attr("originY",function () {
-              return  Number(d3.select(this).attr("originY"))+delta.y;
+            svg.selectAll("rect.brushRect").attr("originX", function () {
+                return Number(d3.select(this).attr("originX")) + delta.x;
+            }).attr("originY", function () {
+                return Number(d3.select(this).attr("originY")) + delta.y;
             });
-            svg.selectAll("rect").attr("x",function () {
-              return  Number(d3.select(this).attr("x"))+delta.x;
-            }).attr("y",function () {
-              return  Number(d3.select(this).attr("y"))+delta.y;
-            }).attr("transform-origin",function () {
+            svg.selectAll("rect").attr("x", function () {
+                return Number(d3.select(this).attr("x")) + delta.x;
+            }).attr("y", function () {
+                return Number(d3.select(this).attr("y")) + delta.y;
+            }).attr("transform-origin", function () {
                 var id = d3.select(this).attr("mainId");
-                var brushrect =id&&d3.select("rect#"+id)||d3.select(this);
-              return brushrect.attr("originX")+" "+brushrect.attr("originY");
+                var brushrect = id && d3.select("rect#" + id) || d3.select(this);
+                return brushrect.attr("originX") + " " + brushrect.attr("originY");
             });
 
         }
-        function HandleLeftMouseUp(event){
-            svgdom.removeEventListener("mousemove",HandleLeftMouseMove);
-            svgdom.removeEventListener("mouseup",HandleLeftMouseUp);
+
+        function HandleLeftMouseUp(event) {
+            svgdom.removeEventListener("mousemove", HandleLeftMouseMove);
+            svgdom.removeEventListener("mouseup", HandleLeftMouseUp);
+        }
+
+        svgdom.addEventListener("wheel", HandleMouseWheel, false);
+        function HandleMouseWheel(event) {
+            pointCloud.updateBrushOnWheel();
         }
 
     },
@@ -558,12 +570,12 @@ pointCloud3d.prototype = {
         var pointCloud = this;
         var svg = d3.select(this.container).select("svg");
         var boxmap = pointCloud.boxControl.boxmap;
-        boxmap.forEach(function (value, key, map) {
+        boxmap.forEach(function (value, key) {
             var box = value.get(pointCloud.dataindex);
             if (box != null) {
                 var p1 = pointCloud.trans3dto2d(box.x - box.w / 2, box.y - box.l / 2, 0);
                 var p2 = pointCloud.trans3dto2d(box.x + box.w / 2, box.y + box.l / 2, 0);
-                MyRect(p1.x, p1.y,Math.abs( p2.x - p1.x), Math.abs(p2.y - p1.y), "rect"+key, box.r, svg);
+                MyRect(p1.x, p1.y, Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y), "rect" + key, box.r, svg);
             }
         })
         d3.selectAll(".brushRect")
@@ -577,12 +589,19 @@ pointCloud3d.prototype = {
                 $("#yInput").val(box.y);
                 $("#lengthInput").val(box.l);
                 $("#widthInput").val(box.w);
+                pointCloud.controls2d.target.x = pointCloud.camera.position.x = box.x;
+                pointCloud.controls2d.target.y = pointCloud.camera.position.y = box.y;
+                pointCloud.renderer.render(pointCloud.scene,pointCloud.camera);
+                pointCloud.refrushbrush();
             })
+    },
+    updateBrushOnWheel: function () {
+        this.refrushbrush();
     },
     removebrush: function () {
         d3.select(this.container).selectAll("svg").remove();
     },
-    refrushbrush:function () {
+    refrushbrush: function () {
         var svg = d3.select(this.container).select("svg.pointCloud3d");
         svg.selectAll("rect").remove();
         svg.selectAll("g").remove();
@@ -605,7 +624,7 @@ pointCloud3d.prototype = {
 
         };
     }
-    
+
 }
 BoxControl = function (boxmap) {
     this.boxmap = boxmap || new Map;
@@ -660,12 +679,12 @@ Box.prototype = {
         var zmin = Number.MAX_VALUE;
         var zmax = -Number.MAX_VALUE;
         data.forEach(function (v) {
-            if (box.isInbox(v.x*10,v.y*10)) {
-                if (v.z*10 > zmax) {
-                    zmax = v.z*10;
+            if (box.isInbox(v.x * 10, v.y * 10)) {
+                if (v.z * 10 > zmax) {
+                    zmax = v.z * 10;
                 }
-                if (v.z*10 < zmin) {
-                    zmin = v.z*10;
+                if (v.z * 10 < zmin) {
+                    zmin = v.z * 10;
                 }
             }
 
