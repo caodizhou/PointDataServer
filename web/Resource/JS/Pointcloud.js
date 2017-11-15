@@ -189,7 +189,7 @@ pointCloud3d.prototype = {
             // now = Date.now();
             // if (now - time > 100 && $("#onoffswitch").is(':checked'))
             if (dataindex != scale.dataindex) {
-
+                $("#frameIndex").text(scale.dataindex);
                 geometry = new THREE.Geometry();
                 /*	NO ONE SAID ANYTHING ABOUT MATH! UGH!	*/
                 var dataset = data[(scale.dataindex) % data.length];
@@ -328,7 +328,9 @@ pointCloud3d.prototype = {
                 box.w = point2.x - point1.x;
                 box.l = point2.y - point1.y;
                 box.r = r;
-                box.getHeight(pointCloud.data[pointCloud.dataindex]);
+                if(!box.h || box.frameType == 1){
+                    box.getHeight(pointCloud.data[pointCloud.dataindex])
+                }
             }
         }
 
@@ -360,8 +362,8 @@ pointCloud3d.prototype = {
         var cubel = l * 2 * targetDistance / this.HEIGHT;
         var cubew = w * 2 * targetDistance / this.HEIGHT;
 
-        function getheight(x, y, h, w) {
-            var size = Math.max(h, w);
+        function getheight(x, y, l, w) {
+            var size = Math.max(l, w);
             var minx = x - size / 2;
             var maxx = x + size / 2;
             var miny = y - size / 2;
@@ -435,9 +437,19 @@ pointCloud3d.prototype = {
                 .on("dblclick", function () {
                     pointCloud.updateCube();
                     var id = Number(d3.select(this).attr("id").substr(4));
+                    var startFrame = pointCloud.boxControl.boxmap.get(id).get("startFrame")?pointCloud.boxControl.boxmap.get(id).get("startFrame"):null;
+                    var endFrame = pointCloud.boxControl.boxmap.get(id).get("endFrame")?pointCloud.boxControl.boxmap.get(id).get("endFrame"):null;
                     var box = pointCloud.boxControl.boxmap.get(id).get(pointCloud.dataindex);
                     $("#BoxIdInput").val(id);
                     d3.select("#BoxIdInput").property("oldId", id);
+                    d3.select("#BoxIdInput").property("oldStartFrame", startFrame);
+                    d3.select("#BoxIdInput").property("oldEndFrame", endFrame);
+                    d3.select("#BoxIdInput").property("oldFrameType", box.frameType);
+                    if(startFrame != null && endFrame !=null){
+                        $("#startFrame").val(startFrame);
+                        $("#endFrame").val(endFrame);
+                    }
+                    $("#frameType").val(box.frameType);
                     $("#xInput").val(box.x);
                     $("#yInput").val(box.y);
                     $("#lengthInput").val(Math.abs(box.l));
@@ -584,13 +596,24 @@ pointCloud3d.prototype = {
             .on("dblclick", function () {
                 pointCloud.updateCube();
                 var id = Number(d3.select(this).attr("id").substr(4));
+                var startFrame = pointCloud.boxControl.boxmap.get(id).get("startFrame")?pointCloud.boxControl.boxmap.get(id).get("startFrame"):null;
+                var endFrame = pointCloud.boxControl.boxmap.get(id).get("endFrame")?pointCloud.boxControl.boxmap.get(id).get("endFrame"):null;
+                // var box = pointCloud.boxControl.boxmap.get(id).get(pointCloud.dataindex);
                 var box = pointCloud.boxControl.boxmap.get(Number(id)).get(pointCloud.dataindex);
+                d3.select("#BoxIdInput").property("oldStartFrame", startFrame);
+                d3.select("#BoxIdInput").property("oldEndFrame", endFrame);
+                d3.select("#BoxIdInput").property("oldFrameType", box.frameType);
                 $("#BoxIdInput").val(id);
                 d3.select("#BoxIdInput").property("oldId", id);
                 $("#xInput").val(box.x);
                 $("#yInput").val(box.y);
                 $("#lengthInput").val(box.l);
                 $("#widthInput").val(box.w);
+                if(startFrame != null && endFrame !=null){
+                    $("#startFrame").val(startFrame);
+                    $("#endFrame").val(endFrame);
+                }
+                $("#frameType").val(box.frameType);
                 pointCloud.controls2d.target.x = pointCloud.camera.position.x = box.x;
                 pointCloud.controls2d.target.y = pointCloud.camera.position.y = box.y;
                 pointCloud.renderer.render(pointCloud.scene,pointCloud.camera);
@@ -659,7 +682,7 @@ BoxControl.prototype = {
 
 
 }
-Box = function (x, y, w, l, r, id, dataindex, type) {
+Box = function (x, y, w, l, r, id, dataindex) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -668,7 +691,7 @@ Box = function (x, y, w, l, r, id, dataindex, type) {
     this.id = id;
     this.dataindex = dataindex;
     this.auto = true;
-    this.type = type;
+    this.frameType = 0;//0-普通帧,1-关键帧
 }
 Box.prototype = {
     getHeight: function (data) {

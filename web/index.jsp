@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +28,10 @@
 <div class="PointCloudView">
 
     <div class="brush" style="position: absolute;top:50%;z-index:9999">
-        <button id="brush">brush</button>
+        <button id="brush" class="btn btn-danger">brush</button>
+    </div>
+    <div class="frame-index">
+        <span>当前第</span>  <span id="frameIndex">0</span> <span>帧</span>
     </div>
     <!--<input type="file" name="file" id='filea' onchange='aShow()'/>-->
     <div class="progress-bar1" id="processBar" style="position: absolute ;z-index : 1000;bottom: 2%">
@@ -67,19 +71,38 @@
 
                 <div class="input-group">
                     <span class="input-group-addon">x  </span>
-                    <input type="text" class="form-control" id="xInput">
+                    <input type="text" class="form-control" id="xInput" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">y</span>
-                    <input type="text" class="form-control" id="yInput">
+                    <input type="text" class="form-control" id="yInput" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">l</span>
-                    <input type="text" class="form-control" id="lengthInput">
+                    <input type="text" class="form-control" id="lengthInput" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">w</span>
-                    <input type="text" class="form-control" id="widthInput">
+                    <input type="text" class="form-control" id="widthInput" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">帧类型</span>
+
+                    <select class="form-control" id="frameType">
+                        <option value="0">普通帧</option>
+                        <option value="1">关键帧</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">启止帧</span>
+                    <input type="text" class="form-control" id="startFrame" style="
+                        width: 47%;
+                        float: none;
+                    ">to<input type="text" class="form-control" id="endFrame" style="
+                        width: 47%;
+                        float: none;
+                    ">
                 </div>
             </div>
             <div class="button-box">

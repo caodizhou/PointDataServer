@@ -56,31 +56,78 @@ function pointload() {
             d3.select("#submitInput").on("click",function () {
                 var oldid = d3.select("#BoxIdInput").property("oldId");
                 var id = Number($("#BoxIdInput").val());
-                if(oldid==id) {
-                    return;
-                }
                 var map = point3d.boxControl.boxmap;
-                if(map.get(id)!=null&&map.get(id).get(point3d.dataindex)!=null){
-                    alert("该id已存在");
-                    return;
-                }
-                var box = map.get(oldid).get(point3d.dataindex);
-                if(box==null){
-                    alert("原框不存在");
-                }
-                map.get(oldid).delete(point3d.dataindex);
-                if(map.get(id)!=null){
-                    map.get(id).set(point3d.dataindex,box);
-                }
-                else {
-                    var indexmap = new Map;
-                    indexmap.set(point3d.dataindex,box);
-                    map.set(id,indexmap);
-                }
-                d3.select("#BoxIdInput").property("oldId",id);
-                var svg = d3.select("svg.pointCloud3d");
+                var oldStartFrame = d3.select("#BoxIdInput").property("oldStartFrame");
+                var oldEndFrame = d3.select("#BoxIdInput").property("oldEndFrame");
+                var oldFrameType = d3.select("#BoxIdInput").property("oldFrameType");
+                var startFrame = $('#startFrame').val()?$('#startFrame').val():null;
+                var endFrame = $('#endFrame').val()?$('#endFrame').val():null;
+                var frameType = $('#frameType').val();
+                var oldKeyFrame = map.get(oldid).get("oldKeyFrame");
+                if(oldid!=id) {
+                    if(map.get(id)!=null&&map.get(id).get(point3d.dataindex)!=null){
+                        alert("该id已存在");
+                        return;
+                    }
+                    var box = map.get(oldid).get(point3d.dataindex);
+                    if(box==null){
+                        alert("原框不存在");
+                    }
+                    map.get(oldid).delete(point3d.dataindex);
+                    if(map.get(id)!=null){
+                        map.get(id).set(point3d.dataindex,box);
+                    }
+                    else {
+                        var indexmap = new Map;
+                        indexmap.set(point3d.dataindex,box);
+                        map.set(id,indexmap);
+                    }
+                    d3.select("#BoxIdInput").property("oldId",id);
+                    var svg = d3.select("svg.pointCloud3d");
 
-                !svg.empty()&&changeRectId(oldid,id,svg);
+                    !svg.empty()&&changeRectId(oldid,id,svg);
+                }
+                if(frameType != oldFrameType){
+                    if(frameType == 1){
+                        map.get(id).set("keyFrame",point3d.dataindex);
+                        var box_temp = map.get(id).get(point3d.dataindex)
+                        box_temp.getHeight(point3d.data[point3d.dataindex])
+                        if(oldKeyFrame !=null){
+                            map.get(id).get(oldKeyFrame).frameType = 0;
+                            map.get(id).get(oldKeyFrame).auto = false;
+                        }
+                        map.get(id).get(point3d.dataindex).frameType = frameType;
+                    } else {
+                        map.get(id).set("keyFrame",null);
+                        map.get(id).get(point3d.dataindex).frameType = frameType;
+                    }
+                }
+                if(startFrame != null && endFrame != null
+                    &&  0 <= startFrame < endFrame
+                ){
+                    map.get(id).set("startFrame",Number(startFrame));
+                    map.get(id).set("endFrame",Number(endFrame));
+
+                    if(map.get(id).get(startFrame)){
+                        map.get(id).get(startFrame).auto = false;
+                    }else{
+                        var box_temp = map.get(id).get(point3d.dataindex);
+                        var box = new Box(box_temp.x,box_temp.y,box_temp.w,box_temp.l,box_temp.r,id,startFrame);
+                        box.getHeight(point3d.data[startFrame])
+                        box.auto = false;
+                        map.get(id).set(Number(startFrame),box);
+                    }
+                    if(map.get(id).get(endFrame)){
+                        map.get(id).get(endFrame).auto = false;
+                    }else{
+                        var box_temp = map.get(id).get(point3d.dataindex);
+                        var box = new Box(box_temp.x,box_temp.y,box_temp.w,box_temp.l,box_temp.r,id,endFrame);
+                        box.auto = false;
+                        box.getHeight(point3d.data[endFrame])
+                        map.get(id).set(Number(endFrame),box);
+                    }
+                }
+
             });
             d3.select("#persistenceInput").on("click",function () {
                 console.log(JsonUtils.mapToObj(point3d.boxControl.boxmap))
@@ -107,6 +154,7 @@ function pointload() {
                     //     .style("visibility", "hidden");
                     // d3.selectAll(".pointCloud3d")
                     //     .style("visibility", "visible");
+                    point3d.controls.target.copy(point3d.controls2d.target);
                     point3d.removebrush();
                     point3d.generateCube();
                 } else {
