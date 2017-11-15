@@ -4,10 +4,11 @@
 //------------------------------------------------------------------------------
 //                Notification Without sound
 var messageboxes = {
-    setMessage: function (status,msg) {
-        Lobibox.notify(status, {
+    setMessage: function (type,msg,title) {
+        Lobibox.notify(type, {
             sound: false,
-            msg: msg
+            msg: msg,
+            title: title
         });
     }
 }

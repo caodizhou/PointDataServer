@@ -23,7 +23,7 @@ function pointload() {
                 var id = Number($("#BoxIdInput").val());
                 var map = point3d.boxControl.boxmap;
                 if(map.get(id)==null){
-                    alert("该ID不存在");
+                    messageboxes.setMessage('error','自动添加帧失败,该ID不存在!');
                 }
                 var dataindexmap = map.get(id);
                 var index = point3d.dataindex;
@@ -45,6 +45,7 @@ function pointload() {
                 if(index>point3d.dataindex){
                     point3d.boxControl.interpolation(id,point3d.dataindex,index);
                 }
+                messageboxes.setMessage('success','自动添加帧成功!');
             });
             d3.select("#removeInput").on("click",function () {
                 var id = Number($("#BoxIdInput").val());
@@ -52,6 +53,7 @@ function pointload() {
                 map.get(id).delete(point3d.dataindex);
                 var svg = d3.select("svg.pointCloud3d");
                 !svg.empty()&&deleteRectById(id,svg);
+                messageboxes.setMessage('success','删除帧成功!');
             });
             d3.select("#submitInput").on("click",function () {
                 var oldid = d3.select("#BoxIdInput").property("oldId");
@@ -64,14 +66,26 @@ function pointload() {
                 var endFrame = $('#endFrame').val()?$('#endFrame').val():null;
                 var frameType = $('#frameType').val();
                 var oldKeyFrame = map.get(oldid).get("oldKeyFrame");
+                var tempKeyFrame = frameType== 1 ? point3d.dataindex:oldKeyFrame;
+                if (startFrame > endFrame ||
+                    startFrame > tempKeyFrame ||
+                    tempKeyFrame > endFrame ||
+                    startFrame < 0 ||
+                    endFrame< 0
+                )
+                {
+                    messageboxes.setMessage('warning','请设置合适的起止帧!');
+                    return;
+                }
                 if(oldid!=id) {
                     if(map.get(id)!=null&&map.get(id).get(point3d.dataindex)!=null){
-                        alert("该id已存在");
+                        messageboxes.setMessage('error','该id已存在!');
                         return;
                     }
                     var box = map.get(oldid).get(point3d.dataindex);
                     if(box==null){
-                        alert("原框不存在");
+                        messageboxes.setMessage('warning','原框不存在!');
+                        return;
                     }
                     map.get(oldid).delete(point3d.dataindex);
                     if(map.get(id)!=null){
@@ -127,7 +141,7 @@ function pointload() {
                         map.get(id).set(Number(endFrame),box);
                     }
                 }
-
+                messageboxes.setMessage('success','设置更改成功!');
             });
             d3.select("#persistenceInput").on("click",function () {
                 console.log(JsonUtils.mapToObj(point3d.boxControl.boxmap))
@@ -140,10 +154,10 @@ function pointload() {
                     // contentType: "application/json; charset=utf-8",
                     data: {'boxmap':JSON.stringify(boxmapJson)},
                     success: function (data) {
-                        console.log(data)
+                        messageboxes.setMessage('success','持久化到xml成功!');
                     },
                     error: function () {
-                        console.log("error")
+                        messageboxes.setMessage('error','持久化到xml失败!');
                     }
                 })
             })
