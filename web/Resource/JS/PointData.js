@@ -122,8 +122,8 @@ function pointload() {
                     map.get(id).set("startFrame",Number(startFrame));
                     map.get(id).set("endFrame",Number(endFrame));
 
-                    if(map.get(id).get(startFrame)){
-                        map.get(id).get(startFrame).auto = false;
+                    if(map.get(id).get(Number(startFrame))){
+                        map.get(id).get(Number(startFrame)).auto = false;
                     }else{
                         var box_temp = map.get(id).get(point3d.dataindex);
                         var box = new Box(box_temp.x,box_temp.y,box_temp.w,box_temp.l,box_temp.r,id,startFrame);
@@ -131,8 +131,8 @@ function pointload() {
                         box.auto = false;
                         map.get(id).set(Number(startFrame),box);
                     }
-                    if(map.get(id).get(endFrame)){
-                        map.get(id).get(endFrame).auto = false;
+                    if(map.get(id).get(Number(endFrame))){
+                        map.get(id).get(Number(endFrame)).auto = false;
                     }else{
                         var box_temp = map.get(id).get(point3d.dataindex);
                         var box = new Box(box_temp.x,box_temp.y,box_temp.w,box_temp.l,box_temp.r,id,endFrame);

@@ -440,11 +440,13 @@ pointCloud3d.prototype = {
                     var startFrame = pointCloud.boxControl.boxmap.get(id).get("startFrame")?pointCloud.boxControl.boxmap.get(id).get("startFrame"):null;
                     var endFrame = pointCloud.boxControl.boxmap.get(id).get("endFrame")?pointCloud.boxControl.boxmap.get(id).get("endFrame"):null;
                     var box = pointCloud.boxControl.boxmap.get(id).get(pointCloud.dataindex);
+                    var oldKeyFrame = pointCloud.boxControl.boxmap.get(id).get("keyFrame");
                     $("#BoxIdInput").val(id);
                     d3.select("#BoxIdInput").property("oldId", id);
                     d3.select("#BoxIdInput").property("oldStartFrame", startFrame);
                     d3.select("#BoxIdInput").property("oldEndFrame", endFrame);
                     d3.select("#BoxIdInput").property("oldFrameType", box.frameType);
+                    d3.select("#BoxIdInput").property("oldKeyFrame", oldKeyFrame);
                     if(startFrame != null && endFrame !=null){
                         $("#startFrame").val(startFrame);
                         $("#endFrame").val(endFrame);
@@ -598,11 +600,12 @@ pointCloud3d.prototype = {
                 var id = Number(d3.select(this).attr("id").substr(4));
                 var startFrame = pointCloud.boxControl.boxmap.get(id).get("startFrame")?pointCloud.boxControl.boxmap.get(id).get("startFrame"):null;
                 var endFrame = pointCloud.boxControl.boxmap.get(id).get("endFrame")?pointCloud.boxControl.boxmap.get(id).get("endFrame"):null;
-                // var box = pointCloud.boxControl.boxmap.get(id).get(pointCloud.dataindex);
+                var oldKeyFrame = pointCloud.boxControl.boxmap.get(id).get("keyFrame");
                 var box = pointCloud.boxControl.boxmap.get(Number(id)).get(pointCloud.dataindex);
                 d3.select("#BoxIdInput").property("oldStartFrame", startFrame);
                 d3.select("#BoxIdInput").property("oldEndFrame", endFrame);
                 d3.select("#BoxIdInput").property("oldFrameType", box.frameType);
+                d3.select("#BoxIdInput").property("oldKeyFrame", oldKeyFrame);
                 $("#BoxIdInput").val(id);
                 d3.select("#BoxIdInput").property("oldId", id);
                 $("#xInput").val(box.x);
