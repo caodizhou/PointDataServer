@@ -7,8 +7,9 @@
     <link type="text/css" href="/Resource/CSS/Switch.css" rel="stylesheet">
     <link type="text/css" href="/Resource/CSS/PointCloud2d.css" rel="stylesheet">
     <link type="text/css" href="/Resource/CSS/ProcessBar.css" rel="stylesheet">
-    <link type="text/css" href="Resource/CSS/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" href="https://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link type="text/css" href="Resource/CSS/index.css" rel="stylesheet">
+    <link type="text/css" href="Resource/CSS/info/Lobibox.min.css" rel="stylesheet">
     <script src="Resource/JS/JsonUtils.js"></script>
     <script src="/Resource/JSLIB/three.js"></script>
     <script src="/Resource/JSLIB/Stats.js"></script>
@@ -133,5 +134,9 @@
     });
 </script>
 <script src="/Resource/JS/ProcessBar.js"></script>
-<script src="Resource/JS/lib/bootstrap.min.js"></script>
+<script src="Resource/JS/bootstrap.min.js"></script>
+<script src="Resource/JS/lib/lobibox.min.js"></script>
+<script src="Resource/JS/lib/messageboxes.min.js"></script>
+<script src="Resource/JS/lib/notifications.min.js"></script>
+<script src="Resource/JS/message.js"></script>
 </html>
