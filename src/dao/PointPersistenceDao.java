@@ -43,8 +43,8 @@ public class PointPersistenceDao {
                 Map.Entry e1 = (Map.Entry) it1.next();
                 String key1 = (String) e1.getKey();
                 if(!JsonUtils.isNumeric(key1)){
-                    Integer v = (Integer) e1.getValue();
-                    box.addAttribute(key1,v+"");
+                    String v = e1.getValue().toString();
+                    box.addAttribute(key1,v);
                     continue;
                 }
                 JSONObject value1 = (JSONObject)e1.getValue();
@@ -68,8 +68,7 @@ public class PointPersistenceDao {
         format.setEncoding("UTF-8");//设置编码格式
         XMLWriter xmlWriter = null;
         try {
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             xmlWriter = new XMLWriter(new FileOutputStream("/Users/lijie/Documents/项目/PointDataServer/web/Resource/xml/"+ sdf.format(new Date())+".xml"),format);
             xmlWriter.write(document);
             xmlWriter.close();

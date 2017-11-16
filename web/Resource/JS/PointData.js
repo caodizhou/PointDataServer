@@ -67,11 +67,11 @@ function pointload() {
                 var frameType = $('#frameType').val();
                 var oldKeyFrame = map.get(oldid).get("oldKeyFrame");
                 var tempKeyFrame = frameType== 1 ? point3d.dataindex:oldKeyFrame;
-                if (startFrame > endFrame ||
-                    startFrame > tempKeyFrame ||
+                if (Number(startFrame) > Number(endFrame) ||
+                    Number(startFrame) > Number(tempKeyFrame) ||
                     tempKeyFrame > endFrame ||
-                    startFrame < 0 ||
-                    endFrame< 0
+                    Number(startFrame) < 0 ||
+                    Number(endFrame)< 0
                 )
                 {
                     messageboxes.setMessage('warning','请设置合适的起止帧!');
@@ -141,6 +141,7 @@ function pointload() {
                         map.get(id).set(Number(endFrame),box);
                     }
                 }
+                map.get(id).set("type",$('#type').val());
                 messageboxes.setMessage('success','设置更改成功!');
             });
             d3.select("#persistenceInput").on("click",function () {

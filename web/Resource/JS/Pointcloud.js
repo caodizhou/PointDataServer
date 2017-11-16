@@ -740,6 +740,30 @@ Box.prototype = {
             return ((x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0));
         }
     },
+    getPointNumber(data){
+        var box = this;
+        box.getVertexPoint();
+        if (data == null || data.length == 0) {
+            this.h = 0;
+            this.z = 0;
+            return;
+        }
+        var zmin = Number.MAX_VALUE;
+        var zmax = -Number.MAX_VALUE;
+        data.forEach(function (v) {
+            if (box.isInbox(v.x * 10, v.y * 10)) {
+                if (v.z * 10 > zmax) {
+                    zmax = v.z * 10;
+                }
+                if (v.z * 10 < zmin) {
+                    zmin = v.z * 10;
+                }
+            }
+
+        })
+        this.z = (zmax + zmin) / 2;
+        this.h = (zmax - zmin);
+    },
     getVertexPoint: function () {
 
         var x = this.x;

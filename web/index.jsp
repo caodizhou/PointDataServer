@@ -27,7 +27,6 @@
 </head>
 <body>
 <div class="PointCloudView">
-
     <div class="brush" style="position: absolute;top:50%;z-index:9999">
         <button id="brush" class="btn btn-danger">brush</button>
     </div>
@@ -96,7 +95,7 @@
                 </div>
 
                 <div class="input-group">
-                    <span class="input-group-addon">启止帧</span>
+                    <span class="input-group-addon">起止帧</span>
                     <input type="text" class="form-control" id="startFrame" style="
                         width: 47%;
                         float: none;
@@ -105,12 +104,23 @@
                         float: none;
                     ">
                 </div>
+                <div class="input-group">
+                    <span class="input-group-addon">物体类型</span>
+
+                    <select class="form-control" id="type">
+                        <option value="car">轿车</option>
+                        <option value="bus">公交车</option>
+                        <option value="pedestrian">行人</option>
+                        <option value="cyclist">骑车人</option>
+                        <option value="truck">卡车</option>
+                    </select>
+                </div>
             </div>
             <div class="button-box">
-                <input type="button" id="submitInput" value="Submit" class="btn btn-default">
-                <input type="button" id="interpolateInput" value="interpolate" class="btn btn-default">
-                <input type="button" id="removeInput" value="remove" class="btn btn-default">
-                <input type="button" id="persistenceInput" value="persistence" class="btn btn-primary">
+                <input type="button" id="submitInput" value="提交" class="btn btn-default">
+                <input type="button" id="interpolateInput" value="插入" class="btn btn-default">
+                <input type="button" id="removeInput" value="删除" class="btn btn-default">
+                <input type="button" id="persistenceInput" value="持久化" class="btn btn-primary">
             </div>
         </div>
     </div>
