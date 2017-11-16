@@ -35,7 +35,7 @@
         <span>当前第</span>  <span id="frameIndex">0</span> <span>帧</span>
     </div>
     <!--<input type="file" name="file" id='filea' onchange='aShow()'/>-->
-    <div class="progress-bar1" id="processBar" style="position: absolute ;z-index : 1000;bottom: 2%">
+    <div class="progress-bar1" id="processBar">
         <div id="all-progress">
             <div id="current-progress">
                 <span id="progress-button"></span>

@@ -433,6 +433,7 @@ pointCloud3d.prototype = {
             boxmap.set(id, indexmap);
 
             MyRect(x, y, width, height, "rect" + id, 0, svg);
+            point3d.updateCube();
             d3.select("rect#rect" + id)
                 .on("dblclick", function () {
                     pointCloud.updateCube();

@@ -1,6 +1,10 @@
 /*  关于progress的整体框架 */
 .progress-bar1 {
-    width          :   100%;
+    position: absolute ;
+    z-index : 1000;
+    bottom: 2%;
+    right: 20px;
+    left: 20px;
 }
 
 /*  整条progress    */

@@ -42,7 +42,6 @@ function dragmove(d) {
             .property("coordinates", coordinates)
     }
     reLayoutDrag(mainId, subRectWidth, mainX, mainY, mainHeight, mainWidth);
-
 }
 
 //结束拖拽后重新布局子矩形
@@ -111,8 +110,8 @@ function dragend() {
     d3.select("#" + mainId).attr("originX", mainOriginX)
         .attr("originY", mainOriginY)
         .attr('transform-origin', mainOriginX + " " + mainOriginY)
-
-
+    point3d.updateCube()
+    point3d.boxControl.boxmap.get(Number(mainId.substr(4))).get(point3d.dataindex).auto = false
 }
 
 //子矩形拖拽后的重新布局，与主体拖拽结束后的重新布局区别在于这里不改变旋转中心来保证拖拽方向正常,注意此时改变coordinates的值

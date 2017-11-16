@@ -17,6 +17,7 @@ scale = function (btn, bar, cur_bar, datalenth) {
     this.maxLength = this.minLength + this.bar.width();
     this.currentX = this.btn.offset().left;
     this.currentY = this.btn.offset().top;
+    this.width;
     this.init();
 };
 
@@ -27,13 +28,17 @@ scale.prototype = {
         f.cur_bar.css("width", "0%");
         f.currentX = f.minLength;
         var bar = document.getElementById("processBar");
+        f.width = $("#processBar").width() / f.datalenth
         document.getElementById("progress-button").onmousedown = function () {
             bar.onmousemove = function (ev) {
                 var ev = ev || window.event;
 
                 var p = ev;
                 var moveX = p.clientX;
-                var moveY = p.clientY;
+                if(moveX - p.clientX){
+                    
+                }
+
                 if (Math.abs(moveX - f.currentX) < 100  ) {
                     if (moveX < f.minLength) {
                         f.cur_bar.css("width", "0%");
