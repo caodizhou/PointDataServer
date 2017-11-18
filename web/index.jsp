@@ -105,7 +105,7 @@
                     ">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">物体类型</span>
+                    <span class="input-group-addon">类型</span>
 
                     <select class="form-control" id="type">
                         <option value="car">轿车</option>
@@ -117,10 +117,10 @@
                 </div>
             </div>
             <div class="button-box">
-                <input type="button" id="submitInput" value="提交" class="btn btn-default">
-                <input type="button" id="interpolateInput" value="插入" class="btn btn-default">
-                <input type="button" id="removeInput" value="删除" class="btn btn-default">
-                <input type="button" id="persistenceInput" value="持久化" class="btn btn-primary">
+                <input type="button" id="submitInput" value="提交(S)" class="btn btn-default">
+                <input type="button" id="interpolateInput" value="插入(I)" class="btn btn-default">
+                <input type="button" id="removeInput" value="删除(D)" class="btn btn-default">
+                <input type="button" id="persistenceInput" value="持久化(P)" class="btn btn-primary">
             </div>
         </div>
     </div>
@@ -142,6 +142,15 @@
             point3d.refrushbrush();
         }
     });
+    document.onkeydown = function (e) {
+        e = e || event;
+        switch(e.keyCode){
+            case 83 : $('#submitInput').click();break;
+            case 73 : $('#interpolateInput').click();break;
+            case 68 : $('#removeInput').click();break;
+            case 80 : $('#persistenceInput').click();break;
+        }
+    }
 </script>
 <script src="/Resource/JS/ProcessBar.js"></script>
 <script src="Resource/JS/bootstrap.min.js"></script>

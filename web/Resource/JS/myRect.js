@@ -586,6 +586,7 @@ function MyRect(x, y, width, height, id,r,svg) {
         .attr('transform', 'rotate(' + roateAngle + ")")
         .attr('transform-origin', ox + " " +oy)
         .style("cursor","e-resize")
+        .style("opacity","0.5")
         .call(subRectRightDrag)
 
     var subRectTop = svg.append("rect")
