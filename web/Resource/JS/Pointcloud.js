@@ -331,12 +331,15 @@ pointCloud3d.prototype = {
                 if(!box.h || box.frameType == 1){
                     box.getHeight(pointCloud.data[pointCloud.dataindex])
                 }
+                if(box.frameType != 1){
+                    box.volumePercent = box.getPointNumber(pointCloud.data[pointCloud.dataindex]) / boxmap.get(id).get('keyPointNum')
+                }
+
             }
         }
 
     },
     removeCube: function () {
-
         while (this.scene.children.length != 1) {
             this.scene.children.pop();
         }
@@ -428,6 +431,7 @@ pointCloud3d.prototype = {
             }
             var box = new Box(x + width / 2, y + height / 2, width, height, rotate, id, pointCloud.dataindex);
             box.auto = false;
+            box.volumePercent = 1;
             var indexmap = new Map();
             indexmap.set(pointCloud.dataindex, box);
             boxmap.set(id, indexmap);
@@ -488,7 +492,6 @@ pointCloud3d.prototype = {
                 document.addEventListener("dblclick", HandleBrushDblClick, true);
                 var selection = $("rect.selection")[0]
                 // selection.addEventListener( 'mousedown', onRightMouseDown, true );
-
             });
 
         function onRightMouseDown(event) {
@@ -680,6 +683,7 @@ BoxControl.prototype = {
             var dis = i - start;
             var box = new Box(boxs.x + dx * dis, boxs.y + dy * dis, boxs.w + dw * dis, boxs.l + dl * dis, boxs.r + drotate * dis, id, i);
             box.auto = true;
+            box.volumePercent = box.getPointNumber(point3d.data[i]) / boxindexmap.get('keyPointNum');
             boxindexmap.set(i, box);
         }
     }
@@ -696,6 +700,7 @@ Box = function (x, y, w, l, r, id, dataindex) {
     this.dataindex = dataindex;
     this.auto = true;
     this.frameType = 0;//0-普通帧,1-关键帧
+    this.volumePercent = 0;
 }
 Box.prototype = {
     getHeight: function (data) {
@@ -747,7 +752,7 @@ Box.prototype = {
         if (data == null || data.length == 0) {
             this.h = 0;
             this.z = 0;
-            return;
+            return 0;
         }
         data.forEach(function (v) {
             if (box.isInbox(v.x * 10, v.y * 10)) {

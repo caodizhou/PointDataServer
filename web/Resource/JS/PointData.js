@@ -50,6 +50,10 @@ function pointload() {
             d3.select("#removeInput").on("click",function () {
                 var id = Number($("#BoxIdInput").val());
                 var map = point3d.boxControl.boxmap;
+                if(id == undefined || map.get(id)==null){
+                    messageboxes.setMessage('error','删除失败!');
+                    return;
+                }
                 map.get(id).delete(point3d.dataindex);
                 var svg = d3.select("svg.pointCloud3d");
                 !svg.empty()&&deleteRectById(id,svg);
@@ -59,6 +63,10 @@ function pointload() {
                 var oldid = d3.select("#BoxIdInput").property("oldId");
                 var id = Number($("#BoxIdInput").val());
                 var map = point3d.boxControl.boxmap;
+                if(id == undefined || map.get(id)==null){
+                    messageboxes.setMessage('error','提交失败!');
+                    return;
+                }
                 var oldStartFrame = d3.select("#BoxIdInput").property("oldStartFrame");
                 var oldEndFrame = d3.select("#BoxIdInput").property("oldEndFrame");
                 var oldFrameType = d3.select("#BoxIdInput").property("oldFrameType");
@@ -88,11 +96,14 @@ function pointload() {
                         return;
                     }
                     map.get(oldid).delete(point3d.dataindex);
+                    box.id = id;
                     if(map.get(id)!=null){
+                        box.volumePercent = box.getPointNumber(point3d.data[point3d.dataindex]) / map.get(id).get('keyPointNum')
                         map.get(id).set(point3d.dataindex,box);
                     }
                     else {
                         var indexmap = new Map;
+                        box.volumePercent = 1;
                         indexmap.set(point3d.dataindex,box);
                         map.set(id,indexmap);
                     }
@@ -111,10 +122,15 @@ function pointload() {
                             map.get(id).get(oldKeyFrame).auto = false;
                         }
                         map.get(id).get(point3d.dataindex).frameType = frameType;
+                        map.get(id).set('keyPointNum',box_temp.getPointNumber(point3d.data[point3d.dataindex]))
+                        map.get(id).get(point3d.dataindex).volumePercent = 1;
                     } else {
-                        map.get(id).set("keyFrame",null);
+                        map.get(id).set("keyFrame",undefined);
                         map.get(id).get(point3d.dataindex).frameType = frameType;
                     }
+                }
+                if(tempKeyFrame == undefined && oldid == id){
+                    map.get(id).set("keyPointNum",map.get(id).get(point3d.dataindex).getPointNumber(point3d.data[point3d.dataindex]));
                 }
                 if(startFrame != null && endFrame != null
                     &&  0 <= startFrame < endFrame
@@ -129,6 +145,7 @@ function pointload() {
                         var box = new Box(box_temp.x,box_temp.y,box_temp.w,box_temp.l,box_temp.r,id,startFrame);
                         box.getHeight(point3d.data[startFrame])
                         box.auto = false;
+                        box.volumePercent = box.getPointNumber(point3d.data[Number(startFrame)]) / map.get(id).get('keyPointNum');
                         map.get(id).set(Number(startFrame),box);
                     }
                     if(map.get(id).get(Number(endFrame))){
@@ -138,6 +155,7 @@ function pointload() {
                         var box = new Box(box_temp.x,box_temp.y,box_temp.w,box_temp.l,box_temp.r,id,endFrame);
                         box.auto = false;
                         box.getHeight(point3d.data[endFrame])
+                        box.volumePercent = box.getPointNumber(point3d.data[Number(endFrame)]) / map.get(id).get('keyPointNum');
                         map.get(id).set(Number(endFrame),box);
                     }
                 }
